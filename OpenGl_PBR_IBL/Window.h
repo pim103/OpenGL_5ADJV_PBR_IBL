@@ -1,5 +1,3 @@
-#include "External/filesystem.h"
-
 #include "Scene.h"
 
 #pragma once
@@ -17,13 +15,6 @@ private:
 	int height;
 	Scene* scene;
 	Shader shader;
-
-	//Textures
-	unsigned int albedo;
-	unsigned int normal;
-	unsigned int metallic;
-	unsigned int roughness;
-	unsigned int ao;
 
 public:
 	Window() {}

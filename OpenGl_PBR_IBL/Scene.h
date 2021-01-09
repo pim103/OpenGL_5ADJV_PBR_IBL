@@ -2,10 +2,7 @@
 #include <vector>
 using namespace std;
 
-#include <glad.h>
-#include <GLFW/glfw3.h>
-
-#include <glm/glm.hpp>
+#include "Sphere.h"
 
 #include "External/camera.h"
 #include "External/shader.h"
@@ -16,6 +13,7 @@ private:
 	void initLights();
 	void initCamera();
 	void renderSphere();
+	void initSpheres();
 
 	Shader shader;
 
@@ -27,6 +25,7 @@ private:
 
 	vector<glm::vec3> lightPositions;
 	vector<glm::vec3> lightColors;
+	vector<Sphere*> spheres;
 
 	unsigned int sphereVAO;
 	unsigned int indexCount;

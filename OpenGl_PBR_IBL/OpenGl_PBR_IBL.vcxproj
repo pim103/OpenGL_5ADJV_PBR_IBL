@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="OpenGl_PBR_IBL.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="External\shader.h" />
     <ClInclude Include="External\shader_m.h" />
     <ClInclude Include="External\shader_s.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Window.h" />

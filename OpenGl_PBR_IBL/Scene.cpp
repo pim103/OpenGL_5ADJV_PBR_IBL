@@ -26,6 +26,26 @@ Scene::Scene(int width, int height, Shader shader) {
 void Scene::initScene() {
 	initLights();
     initCamera();
+    initSpheres();
+}
+
+void Scene::initSpheres() {
+    MaterialList materialList;
+    materialList.initMaterials();
+
+    for (int row = 0; row < nbSpherePerLine; ++row)
+    {
+        for (int col = 0; col < nbSpherePerColumn; ++col)
+        {
+            Material mat = col % 2 == 0 ? materialList.metal_tile : materialList.stone_and_grass;
+
+            spheres.push_back(new Sphere(mat, glm::vec3(
+                (float)(col - (nbSpherePerColumn / 2)) * spacing,
+                (float)(row - (nbSpherePerLine / 2)) * spacing,
+                0.0f
+            )));
+        }
+    }
 }
 
 void Scene::initLights() {
@@ -42,20 +62,6 @@ void Scene::initCamera() {
     globalCamera = Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 }
 
-void Scene::setSphereMaterial(
-    unsigned int albedo,
-    unsigned int normal,
-    unsigned int metallic,
-    unsigned int roughness,
-    unsigned int ao
-) {
-    this->albedo = albedo;
-    this->normal = normal;
-    this->metallic = metallic;
-    this->roughness = roughness;
-    this->ao = ao;
-}
-
 void Scene::renderScene() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -65,30 +71,21 @@ void Scene::renderScene() {
     shader.setMat4("view", view);
     shader.setVec3("camPos", globalCamera.Position);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, albedo);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, normal);
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, metallic);
-    glActiveTexture(GL_TEXTURE3);
-    glBindTexture(GL_TEXTURE_2D, roughness);
-    glActiveTexture(GL_TEXTURE4);
-    glBindTexture(GL_TEXTURE_2D, ao);
-
     glm::mat4 model = glm::mat4(1.0f);
+
+    int nbSphere = spheres.size();
+    for (int idxSphere = 0; idxSphere < nbSphere; ++idxSphere) {
+        spheres[idxSphere]->bindMaterial();
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, spheres[idxSphere]->getPosition());
+        shader.setMat4("model", model);
+        renderSphere();
+    }
+
     for (int row = 0; row < nbSpherePerLine; ++row)
     {
         for (int col = 0; col < nbSpherePerColumn; ++col)
         {
-            model = glm::mat4(1.0f);
-            model = glm::translate(model, glm::vec3(
-                (float)(col - (nbSpherePerColumn / 2)) * spacing,
-                (float)(row - (nbSpherePerLine / 2)) * spacing,
-                0.0f
-            ));
-            shader.setMat4("model", model);
-            renderSphere();
         }
     }
 
