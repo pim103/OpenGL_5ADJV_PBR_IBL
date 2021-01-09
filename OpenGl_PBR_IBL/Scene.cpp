@@ -29,14 +29,8 @@ void Scene::initScene() {
 }
 
 void Scene::initLights() {
-    lightPositions.push_back(glm::vec3(-10.0f, 10.0f, 10.0f));
-    lightPositions.push_back(glm::vec3(10.0f, 10.0f, 10.0f));
-    lightPositions.push_back(glm::vec3(-10.0f, -10.0f, 10.0f));
-    lightPositions.push_back(glm::vec3(10.0f, -10.0f, 10.0f));
+    lightPositions.push_back(glm::vec3(0.0f, 0.0f, 10.0f));
 
-    lightColors.push_back(glm::vec3(300.0f, 300.0f, 300.0f));
-    lightColors.push_back(glm::vec3(300.0f, 300.0f, 300.0f));
-    lightColors.push_back(glm::vec3(300.0f, 300.0f, 300.0f));
     lightColors.push_back(glm::vec3(300.0f, 300.0f, 300.0f));
 
     glm::mat4 projection = glm::perspective(glm::radians(globalCamera.Zoom), (float)width / (float)height, 0.1f, 100.0f);
@@ -70,7 +64,7 @@ void Scene::renderScene() {
     glm::mat4 view = globalCamera.GetViewMatrix();
     shader.setMat4("view", view);
     shader.setVec3("camPos", globalCamera.Position);
-    /*
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, albedo);
     glActiveTexture(GL_TEXTURE1);
@@ -81,19 +75,16 @@ void Scene::renderScene() {
     glBindTexture(GL_TEXTURE_2D, roughness);
     glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_2D, ao);
-    */
+
     glm::mat4 model = glm::mat4(1.0f);
     for (int row = 0; row < nbSpherePerLine; ++row)
     {
-        shader.setFloat("metallic", (float)row / (float)nbSpherePerLine);
         for (int col = 0; col < nbSpherePerColumn; ++col)
         {
-            shader.setFloat("roughness", glm::clamp((float)col / (float)nbSpherePerColumn, 0.05f, 1.0f));
-
             model = glm::mat4(1.0f);
             model = glm::translate(model, glm::vec3(
-                (col - (nbSpherePerColumn / 2)) * spacing,
-                (row - (nbSpherePerLine / 2)) * spacing,
+                (float)(col - (nbSpherePerColumn / 2)) * spacing,
+                (float)(row - (nbSpherePerLine / 2)) * spacing,
                 0.0f
             ));
             shader.setMat4("model", model);
@@ -101,7 +92,8 @@ void Scene::renderScene() {
         }
     }
 
-    for (unsigned int i = 0; i < sizeof(lightPositions) / sizeof(lightPositions[0]); ++i)
+    int nbLights = lightPositions.size();
+    for (unsigned int i = 0; i < nbLights; ++i)
     {
         glm::vec3 newPos = lightPositions[i] + glm::vec3(sin(glfwGetTime() * 5.0) * 5.0, 0.0, 0.0);
         newPos = lightPositions[i];
@@ -173,7 +165,7 @@ void Scene::renderSphere() {
         indexCount = indices.size();
 
         std::vector<float> data;
-        for (unsigned int i = 0; i < positions.size(); ++i)
+        for (size_t i = 0; i < positions.size(); ++i)
         {
             data.push_back(positions[i].x);
             data.push_back(positions[i].y);

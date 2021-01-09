@@ -83,21 +83,17 @@ void Window::initShader() {
     shader = Shader("simple_pbr.vs", "simple_pbr.fs");
 
     shader.use();
-    shader.setVec3("albedo", 0.5f, 0.0f, 0.0f);
-    shader.setFloat("ao", 1.0f);
-    /*
     shader.setInt("albedoMap", 0);
     shader.setInt("normalMap", 1);
     shader.setInt("metallicMap", 2);
     shader.setInt("roughnessMap", 3);
     shader.setInt("aoMap", 4);
 
-    albedo = loadTexture(FileSystem::getPath("data/textures/stoneWithGrass/Stone_Path_006_basecolor.png").c_str());
-    normal = loadTexture(FileSystem::getPath("data/textures/stoneWithGrass/Stone_Path_006_normal.png").c_str());
-    metallic = loadTexture(FileSystem::getPath("data/textures/stoneWithGrass/Stone_Path_006_height.png").c_str());
-    roughness = loadTexture(FileSystem::getPath("data/textures/stoneWithGrass/Stone_Path_006_roughness.png").c_str());
-    ao = loadTexture(FileSystem::getPath("data/textures/stoneWithGrass/Stone_Path_006_ambientOcclusion.png").c_str());
-    */
+    albedo = loadTexture(FileSystem::getPath("data/textures/metal_tiles/Metal_Tiles_003_basecolor.jpg").c_str());
+    normal = loadTexture(FileSystem::getPath("data/textures/metal_tiles/Metal_Tiles_003_normal.jpg").c_str());
+    metallic = loadTexture(FileSystem::getPath("data/textures/metal_tiles/Metal_Tiles_003_metallic.jpg").c_str());
+    roughness = loadTexture(FileSystem::getPath("data/textures/metal_tiles/Metal_Tiles_003_roughness.jpg").c_str());
+    ao = loadTexture(FileSystem::getPath("data/textures/metal_tiles/Metal_Tiles_003_ambientOcclusion.jpg").c_str());
 }
 
 void Window::initScene() {

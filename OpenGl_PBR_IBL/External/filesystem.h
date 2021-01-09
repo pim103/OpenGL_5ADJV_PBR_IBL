@@ -19,7 +19,7 @@ public:
 private:
   static std::string const & getRoot()
   {
-    static char const * givenRoot = "D:/OneDrive/Documents/ESGI_5eme_annee/OpenGL_5ADJV_PBR_IBL";
+    static char const * givenRoot = "D:/OneDrive/Documents/ESGI_5eme_annee/OpenGl/OpenGL_5ADJV_PBR_IBL";
     static std::string root = (givenRoot != nullptr ? givenRoot : "");
     return root;
   }
