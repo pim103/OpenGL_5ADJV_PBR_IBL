@@ -12,10 +12,8 @@ class Scene {
 private:
 	void initLights();
 	void initCamera();
-	void renderSphere();
 	void initSpheres();
-
-	Shader shader;
+	void initBuffer();
 
 	int nbSpherePerLine;
 	int nbSpherePerColumn;
@@ -26,23 +24,25 @@ private:
 	vector<glm::vec3> lightPositions;
 	vector<glm::vec3> lightColors;
 	vector<Sphere*> spheres;
+	vector<Sphere*> spheresLight;
 
-	unsigned int sphereVAO;
-	unsigned int indexCount;
+	Shader pbrShader;
+	Shader equirectangularToCubemapShader;
+	Shader irradianceShader;
+	Shader prefilterShader;
+	Shader brdfShader;
+	Shader backgroundShader;
 
-	//Textures
-	unsigned int albedo;
-	unsigned int normal;
-	unsigned int metallic;
-	unsigned int roughness;
-	unsigned int ao;
+	MaterialList materialList;
+	unsigned int envCubemap;
+	unsigned int irradianceMap;
+	unsigned int prefilterMap;
+	unsigned int brdfLUTTexture;
 
 public:
-	Scene() {}
 	Scene(int width, int height);
-	Scene(int width, int height, Shader shader);
 
 	void initScene();
 	void renderScene();
-	void Scene::setSphereMaterial(unsigned int albedo, unsigned int normal, unsigned int metallic, unsigned int roughness, unsigned int ao);
+	void setShaders(Shader pbrShader, Shader equirectangularToCubemapShader, Shader irradianceShader, Shader prefilterShader, Shader brdfShader, Shader backgroundShader);
 };

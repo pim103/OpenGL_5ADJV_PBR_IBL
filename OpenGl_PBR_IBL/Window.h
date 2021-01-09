@@ -14,7 +14,13 @@ private:
 	int width;
 	int height;
 	Scene* scene;
-	Shader shader;
+
+	Shader pbrShader;
+	Shader equirectangularToCubemapShader;
+	Shader irradianceShader;
+	Shader prefilterShader;
+	Shader brdfShader;
+	Shader backgroundShader;
 
 public:
 	Window() {}

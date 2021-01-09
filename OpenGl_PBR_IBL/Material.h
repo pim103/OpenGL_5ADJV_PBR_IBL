@@ -29,4 +29,6 @@ public:
 
 	Material metal_tile;
 	Material stone_and_grass;
+
+	static unsigned int loadEnvMap();
 };

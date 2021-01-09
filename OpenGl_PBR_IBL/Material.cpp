@@ -24,8 +24,8 @@ void MaterialList::initMaterials() {
 
 	albedo = loadTexture(FileSystem::getPath("data/textures/stoneWithGrass/Stone_Path_006_basecolor.jpg").c_str());
 	normal = loadTexture(FileSystem::getPath("data/textures/stoneWithGrass/Stone_Path_006_normal.jpg").c_str());
-	metallic = loadTexture(FileSystem::getPath("data/textures/stoneWithGrass/Stone_Path_006_height.jpg").c_str());
-	roughness = loadTexture(FileSystem::getPath("data/textures/stoneWithGrass/Stone_Path_006_roughness.jpg").c_str());
+	metallic = loadTexture(FileSystem::getPath("data/textures/stoneWithGrass/Stone_Path_006_height.png").c_str());
+	//roughness = loadTexture(FileSystem::getPath("data/textures/stoneWithGrass/Stone_Path_006_roughness.jpg").c_str());
 	ao = loadTexture(FileSystem::getPath("data/textures/stoneWithGrass/Stone_Path_006_ambientOcclusion.jpg").c_str());
 
     stone_and_grass = Material(albedo, normal, metallic, roughness, ao);
@@ -66,4 +66,32 @@ unsigned int loadTexture(char const* path)
     }
 
     return textureID;
+}
+
+unsigned int MaterialList::loadEnvMap() {
+    // pbr: load the HDR environment map
+    // ---------------------------------
+    stbi_set_flip_vertically_on_load(true);
+    int width, height, nrComponents;
+    float* data = stbi_loadf(FileSystem::getPath("data/textures/misty_pines_1k.hdr").c_str(), &width, &height, &nrComponents, 0);
+    unsigned int hdrTexture;
+    if (data)
+    {
+        glGenTextures(1, &hdrTexture);
+        glBindTexture(GL_TEXTURE_2D, hdrTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data); // note how we specify the texture's data value to be float
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+    }
+    else
+    {
+        std::cout << "Failed to load HDR image." << std::endl;
+    }
+
+    return hdrTexture;
 }

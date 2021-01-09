@@ -73,23 +73,40 @@ void Window::createWindow() {
     }
 
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 }
 
 void Window::initShader() {
-    shader = Shader("simple_pbr.vs", "simple_pbr.fs");
+    pbrShader = Shader("simple_pbr.vs", "simple_pbr.fs");
+    equirectangularToCubemapShader = Shader("cubemap.vs", "equirectangular_to_cubemap.fs");
+    irradianceShader = Shader("cubemap.vs", "irradiance_convolution.fs");
+    prefilterShader = Shader("cubemap.vs", "prefilter.fs");
+    brdfShader = Shader("brdf.vs", "brdf.fs");
+    backgroundShader = Shader("background.vs", "background.fs");
 
-    shader.use();
-    shader.setInt("albedoMap", 0);
-    shader.setInt("normalMap", 1);
-    shader.setInt("metallicMap", 2);
-    shader.setInt("roughnessMap", 3);
-    shader.setInt("aoMap", 4);
+    pbrShader.use();
+    pbrShader.setInt("irradianceMap", 0);
+    pbrShader.setInt("prefilterMap", 1);
+    pbrShader.setInt("brdfLUT", 2);
+    pbrShader.setInt("albedoMap", 3);
+    pbrShader.setInt("normalMap", 4);
+    pbrShader.setInt("metallicMap", 5);
+    pbrShader.setInt("roughnessMap", 6);
+    pbrShader.setInt("aoMap", 7);
 
+    backgroundShader.use();
+    backgroundShader.setInt("environmentMap", 0);
 }
 
 void Window::initScene() {
-    scene = new Scene(width, height, shader);
+    scene = new Scene(width, height);
+    scene->setShaders(pbrShader, equirectangularToCubemapShader, irradianceShader, prefilterShader, brdfShader, backgroundShader);
     scene->initScene();
+
+    int scrWidth, scrHeight;
+    glfwGetFramebufferSize(mainWindow, &scrWidth, &scrHeight);
+    glViewport(0, 0, scrWidth, scrHeight);
 }
 
 void Window::processInput(GLFWwindow* window)
